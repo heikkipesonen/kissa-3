@@ -21,9 +21,9 @@ export default {
 
   props: {
     cursor: {
-      type: Array,
+      type: Number,
       default () {
-        return [10, 10]
+        return 1
       }
     },
 
@@ -36,6 +36,14 @@ export default {
   },
 
   methods: {
+    drawPixel (position) {
+      this.context.beginPath()
+      this.context.arc(position.x, position.y, this.cursor, 0, 2 * Math.PI, false)
+      this.context.fillStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.color[3]})`
+      this.context.fill()
+      this.context.closePath()
+    },
+
     startDraw (event) {
       this.lastEvent = getPointer(event, this.$el)
     },
@@ -43,14 +51,28 @@ export default {
     draw (event) {
       if (this.lastEvent) {
         let position = getPointer(event, this.$el)
+        let stepx = position.x - this.lastEvent.x
+        let stepy = position.y - this.lastEvent.y
 
-        this.context.beginPath()
-        this.context.lineWidth = this.cursor[0]
-        this.context.strokeStyle = `rgba(${this.color[0]}, ${this.color[1]}, ${this.color[2]}, ${this.color[3]})`
-        this.context.moveTo(this.lastEvent.x, this.lastEvent.y)
-        this.context.lineTo(position.x, position.y)
-        this.context.closePath()
-        this.context.stroke()
+        let stepd = Math.sqrt(Math.pow(stepx, 2) + Math.pow(stepy, 2))
+        let maxStepSize = Math.floor(this.cursor / 3) || 1
+
+        if (stepd >= maxStepSize) {
+          let extraSteps = Math.ceil(stepd / maxStepSize)
+          let extraStepSize = {
+            x: stepx / extraSteps,
+            y: stepy / extraSteps
+          }
+
+          for (let i = 0; i < extraSteps; i++) {
+            this.drawPixel({
+              x: this.lastEvent.x + (extraStepSize.x * i),
+              y: this.lastEvent.y + (extraStepSize.y * i)
+            })
+          }
+        } else {
+          this.drawPixel(position)
+        }
 
         this.lastEvent = position
       }
