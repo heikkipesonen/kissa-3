@@ -9,7 +9,7 @@
 
 <script>
 import { getPointer } from '../utils/pointer'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'component-canvas',
@@ -29,9 +29,11 @@ export default {
   },
 
   computed: {
-    view () {
-      return this.$store.getters.viewPort
-    },
+    ...mapGetters(
+      {
+        view: 'viewPort'
+      }
+    ),
 
     center () {
       return this.toCanvas(this.view.size.width / 2, this.view.size.height / 2)
@@ -45,7 +47,6 @@ export default {
   },
 
   methods: {
-
     ...mapActions([
       'setView'
     ]),

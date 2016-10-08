@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuerouter from 'vue-router'
-import Canvas from './components/canvas'
+import Canvas from './components/component-canvas'
 
 Vue.use(Vuerouter)
 /* eslint-disable no-new */
