@@ -1,9 +1,10 @@
 <template>
-  <svg class="view-canvas" width="100%" height="100%" v-on:mousedown.self="startDrag" v-on:click.self="_onClick">
-    <g :transform="style">
+  <div class="canvas-container" v-on:mousedown="startDrag"  v-on:click.self="_onClick">
+    <div class="view-canvas" :style="style">
+      <h2>Kissa</h2>
       <slot></slot>
-    </g>
-  </svg>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -37,7 +38,9 @@ export default {
     },
 
     style () {
-      return `translate(${this.view.x}, ${this.view.y}) scale(${this.view.scale}, ${this.view.scale})`
+      return {
+        transform: `translate3d(${this.view.x}px, ${this.view.y}px, 0) scale3d(${this.view.scale}, ${this.view.scale}, 1)`
+      }
     }
   },
 
@@ -165,12 +168,15 @@ export default {
         },
         center: this.toCanvas(this.view.size.width / 2, this.view.size.height / 2)
       }
-
       this.setView(position)
     }
   },
 
   mounted () {
+    window.addEventListener('mouseup', this.endDrag)
+    window.addEventListener('mousemove', this.onDrag)
+    window.addEventListener('mousewheel', this.viewZoom)
+
     this.fitViewport()
   },
 
@@ -180,12 +186,18 @@ export default {
 </script>
 
 <style scoped>
-.view-canvas{
+.canvas-container {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   overflow: hidden;
+}
+
+.view-canvas{
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 0;
 }
 </style>
