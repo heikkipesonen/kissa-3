@@ -11,11 +11,7 @@ export default {
 
   data () {
     return {
-      lastEvent: {
-        x: 0,
-        y: 0,
-        timeStamp: 0
-      }
+      lastEvent: false
     }
   },
 
@@ -94,7 +90,6 @@ export default {
   },
 
   mounted () {
-    this.lastEvent = false
     this.context = this.$el.getContext('2d')
     this.scale()
     window.addEventListener('mouseup', this.endDraw)
