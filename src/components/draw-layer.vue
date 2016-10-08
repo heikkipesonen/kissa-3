@@ -81,7 +81,6 @@ export default {
     scale () {
       this.$el.width = this.$el.parentNode.offsetWidth
       this.$el.height = this.$el.parentNode.offsetHeight
-      this.bounds = this.$el.getBoundingClientRect()
     }
   },
 
