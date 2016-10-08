@@ -1,6 +1,7 @@
 # vue webpack template
 
-A vue-webpack template with vue-router and things
+Return of kissa-seinä pt 3
+doomed to fail
 
 ## Build Setup
 
