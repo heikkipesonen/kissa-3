@@ -1,18 +1,18 @@
 <template>
   <modal title="draw">
-    <draw-layer></draw-layer>
+    <draw-view></draw-view>
   </modal>
 </template>
 <script>
 import modal from './modal'
-import drawLayer from './draw-layer'
+import drawView from './draw-view'
 
 export default {
   name: 'item-editor',
 
   components: {
     modal,
-    drawLayer
+    drawView
   }
 }
 </script>
