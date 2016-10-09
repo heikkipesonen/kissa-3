@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import { fitCurve } from '../utils/fitcurves'
 import { getPointer } from '../utils/pointer'
 // import { mapActions } from 'vuex'
 
@@ -19,13 +18,7 @@ export default {
   },
 
   props: {
-    error: {
-      type: Number,
-      default () {
-        return 1
-      }
-    },
-
+    // pointer size
     cursor: {
       type: Number,
       default () {
@@ -33,6 +26,7 @@ export default {
       }
     },
 
+    // draw color
     color: {
       type: Array,
       default () {
@@ -66,66 +60,17 @@ export default {
     },
 
     /**
-     * draw one curve into canvas
-     * @param  {[type]} point  [description]
-     * @param  {[type]} stroke [description]
-     * @param  {[type]} color  [description]
-     * @return {[type]}        [description]
+     * draw one 'pixel' (circle) onto defined
+     * position
+     * @param  {object} position {x: number, y: number}
+     * @return {[type]}          [description]
      */
-    drawCurve (point, stroke, color) {
+    drawPixel (position) {
       this.ctx.beginPath()
-      let points = [].concat.apply([], point)
-
-      if (points.length > 4) {
-        this.ctx.moveTo(points[0], points[1])
-        points.splice(0, 2)
-        this.ctx.bezierCurveTo(...points)
-      } else {
-        this.ctx.moveTo(points[0], points[1])
-        this.ctx.lineTo(points[2], points[3])
-      }
-
-      this.ctx.lineWidth = stroke
-      this.ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${color[3]})`
-      this.ctx.stroke()
+      this.ctx.arc(position.x, position.y, this.cursor, 0, 2 * Math.PI, false)
+      this.ctx.fillStyle = `rgba(${this.color.join(', ')})`
+      this.ctx.fill()
       this.ctx.closePath()
-    },
-
-    /**
-     * draw all curves contained in one shape into canvas
-     * @param  {[type]} shape [description]
-     * @return {[type]}       [description]
-     */
-    drawCurves (shape) {
-      shape.curves.forEach((curve) => this.drawCurve(curve, shape.stroke, shape.color))
-    },
-
-    /**
-     * draw all shapes
-     * @return {[type]} [description]
-     */
-    drawShapes () {
-      this.clearCanvas()
-
-      if (this.currentShape) {
-        this.currentShape.curves = fitCurve(this.currentShape.points, this.error)
-        this.drawCurves(this.currentShape)
-      }
-    },
-
-    /**
-     * creta new shape
-     * @param  {[type]} point [description]
-     * @return {[type]}       [description]
-     */
-    createShape (point) {
-      this.currentShape = {
-        points: [[point.x, point.y]],
-        stroke: this.cursor,
-        color: this.color.map((c) => c)
-      }
-
-      return this.currentShape
     },
 
     /**
@@ -135,16 +80,48 @@ export default {
      */
     startDraw (event) {
       this.lastEvent = getPointer(event, this.$el)
-      this.createShape(this.lastEvent)
     },
 
+    /**
+     * draw pixels to a position
+     * @param  {[type]} event [description]
+     * @return {[type]}       [description]
+     */
     draw (event) {
       if (this.lastEvent) {
         let position = getPointer(event, this.$el)
-        this.currentShape.points.push([this.lastEvent.x, this.lastEvent.y])
-        this.currentShape.points.push([position.x, position.y])
-        this.drawShapes()
 
+        // define step size
+        let stepx = position.x - this.lastEvent.x
+        let stepy = position.y - this.lastEvent.y
+
+        // step delta, how much has the cursor moved
+        let stepd = Math.sqrt(Math.pow(stepx, 2) + Math.pow(stepy, 2))
+        let maxStepSize = Math.floor(this.cursor / 3) || 1
+
+        // if max stepsize is reached
+        // interpolate between steps and add more
+        // pixels in between
+        if (stepd >= maxStepSize) {
+          // number of steps to add
+          let extraSteps = Math.ceil(stepd / maxStepSize)
+
+          // interpolation step size
+          let extraStepSize = {
+            x: stepx / extraSteps,
+            y: stepy / extraSteps
+          }
+
+          // draw extra
+          for (let i = 0; i < extraSteps; i++) {
+            this.drawPixel({
+              x: this.lastEvent.x + (extraStepSize.x * i),
+              y: this.lastEvent.y + (extraStepSize.y * i)
+            })
+          }
+        } else {
+          this.drawPixel(position)
+        }
         this.lastEvent = position
       }
     },
@@ -156,12 +133,6 @@ export default {
      */
     endDraw (event) {
       this.lastEvent = false
-      if (this.currentShape.points && this.currentShape.points.length > 1) {
-        this.currentShape.curves = fitCurve(this.currentShape.points, this.error)
-        this.drawShapes()
-        this.flatten()
-        this.currentShape = false
-      }
     },
 
     scale () {
