@@ -85,9 +85,12 @@ export default {
   box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.3);
   border: 4px solid;
   border-color: transparent;
+  position: relative;
+  transition: 0.3s;
 
   &.selected {
-    border-color: #d00;
+    transform: scale3d(1.2, 1.2, 1);
+    box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.8);
   }
 }
 
