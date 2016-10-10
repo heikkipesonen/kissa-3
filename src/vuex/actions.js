@@ -3,8 +3,8 @@ const actions = {
     commit('setView', view)
   },
 
-  addObject ({commit}, object) {
-    commit('addObject', object)
+  addLayer ({commit}, object) {
+    commit('addLayer', object)
   },
 
   setEditor ({commit}, type) {

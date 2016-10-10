@@ -18,7 +18,7 @@ const state = {
 
   editor: false,
 
-  objects: []
+  layers: []
 }
 
 const mutations = {
@@ -26,12 +26,20 @@ const mutations = {
     state.view = view
   },
 
-  addObject (state, shape) {
-    state.objects.push(shape)
+  addLayer (state, layer) {
+    // let screenPositionOnCanvas = {
+    //   x: x + this.view.x * this.view.scale,
+    //   y: y + this.view.y + this.view.scale
+    // }
+    state.layers.push({
+      x: -state.view.x * (1 / state.view.scale),
+      y: -state.view.y * (1 / state.view.scale),
+      scale: 1 / state.view.scale,
+      layer: layer
+    })
   },
 
   setEditor (state, type) {
-    console.log(type)
     state.editor = type
   }
 }

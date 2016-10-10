@@ -1,26 +1,29 @@
 <template>
   <component-canvas>
-    <g v-for="shape in objects">
-      <curve v-for="curve in shape" :data="curve"></curve>
-    </g>
+    <layer v-for="layer in layers" :layer="layer"></layer>
   </component-canvas>
 </template>
 
 <script>
 import ComponentCanvas from './component-canvas'
-import Curve from './curve'
+import layer from './layer'
 import {mapGetters} from 'vuex'
 
 export default {
+
   components: {
     ComponentCanvas,
-    Curve
+    layer
   },
 
   computed: {
     ...mapGetters([
-      'objects'
+      'layers'
     ])
+  },
+
+  beforeUpdate () {
+    console.log(this.layers)
   }
 }
 </script>

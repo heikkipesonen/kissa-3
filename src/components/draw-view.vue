@@ -5,7 +5,7 @@
 
   <div class="draw-tools">
     <div :class="'tool color-picker ' + (isSelected(color) ? 'selected' : '')" v-for="color in colors" :style="getColorPickerStyle(color)" v-on:click="setColor(color)"></div>
-    <div class="tool" v-on:click="_addObject()">+</div>
+    <div class="tool" v-on:click="_addLayer()">+</div>
   </div>
 </div>
 </template>
@@ -47,12 +47,12 @@ export default {
 
   methods: {
     ...mapActions([
-      'addObject',
+      'addLayer',
       'setEditor'
     ]),
 
-    _addObject () {
-      this.addObject(this.layer)
+    _addLayer () {
+      this.addLayer(this.layer)
       this.setEditor(false)
     },
 

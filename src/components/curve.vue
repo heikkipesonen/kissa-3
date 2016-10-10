@@ -10,7 +10,7 @@ export default {
       type: Object,
       default () {
         return {
-          stroke: '#000',
+          stroke: [0, 0, 0, 1],
           strokeWidth: 0
         }
       }
@@ -30,7 +30,6 @@ export default {
         return this.data.curves.map((curve) => {
           let m = curve.slice(0, 1)
           let c = curve.slice(1)
-
           return 'M' + m.join(' ') + ' C ' + c.map((cc) => cc.join(' ')).join(',')
         })
       }

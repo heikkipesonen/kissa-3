@@ -7,7 +7,8 @@ export default {
     return state.editor
   },
 
-  objects (state) {
-    return state.objects
+  layers (state) {
+    console.log(state.layers)
+    return state.layers
   }
 }
