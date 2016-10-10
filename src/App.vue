@@ -1,21 +1,42 @@
 <template>
   <div>
     <router-view></router-view>
-    <div class="toolbar">
-      <button>+</button>
+    <div class="toolbar" v-if="!editor">
+      <button @click="toggleEditor">+</button>
     </div>
 
-    <editor></editor>
+    <drawView v-if="editor"></drawView>
   </div>
 </template>
 <script>
-import editor from './components/editor'
+import {mapActions, mapGetters} from 'vuex'
+import drawView from './components/draw-view'
 
 export default {
   name: 'Kissa',
 
   components: {
-    editor
+    drawView
+  },
+
+  computed: {
+    ...mapGetters([
+      'editor'
+    ])
+  },
+
+  methods: {
+    ...mapActions([
+      'setEditor'
+    ]),
+
+    toggleEditor () {
+      this.editor ? this.setEditor(false) : this.setEditor(true)
+    }
+  },
+
+  mounted () {
+    console.log(this)
   }
 }
 </script>

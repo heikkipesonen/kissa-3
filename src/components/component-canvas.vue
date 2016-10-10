@@ -1,10 +1,9 @@
 <template>
-  <div class="canvas-container" v-on:mousedown="startDrag"  v-on:click.self="_onClick">
-    <div class="view-canvas" :style="style">
-      <h2>Kissa</h2>
+  <svg class="canvas-container" v-on:mousedown="startDrag"  v-on:click.self="_onClick">
+    <g class="view-canvas" :transform="transform">
       <slot></slot>
-    </div>
-  </div>
+    </g>
+  </svg>
 </template>
 
 <script>
@@ -39,10 +38,8 @@ export default {
       return this.toCanvas(this.view.size.width / 2, this.view.size.height / 2)
     },
 
-    style () {
-      return {
-        transform: `translate3d(${this.view.x}px, ${this.view.y}px, 0) scale3d(${this.view.scale}, ${this.view.scale}, 1)`
-      }
+    transform () {
+      return `translate(${this.view.x}, ${this.view.y}) scale(${this.view.scale}, ${this.view.scale})`
     }
   },
 
@@ -194,6 +191,8 @@ export default {
   right: 0;
   bottom: 0;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .view-canvas{

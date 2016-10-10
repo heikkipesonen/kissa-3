@@ -1,14 +1,16 @@
 <template>
 <div class="draw-wrapper">
 
-  <draw-layer :color="color" :cursor="brush"></draw-layer>
+  <draw-layer :color="color" :cursor="brush" :layer="layer"></draw-layer>
 
   <div class="draw-tools">
-    <div :class="'color-picker ' + (isSelected(color) ? 'selected' : '')" v-for="color in colors" :style="getColorPickerStyle(color)" v-on:click="setColor(color)"></div>
+    <div :class="'tool color-picker ' + (isSelected(color) ? 'selected' : '')" v-for="color in colors" :style="getColorPickerStyle(color)" v-on:click="setColor(color)"></div>
+    <div class="tool" v-on:click="_addObject()">+</div>
   </div>
 </div>
 </template>
 <script>
+import {mapActions} from 'vuex'
 import drawLayer from './draw-layer'
 
 export default {
@@ -18,6 +20,8 @@ export default {
 
   data () {
     return {
+      layer: [],
+
       brush: 10,
 
       color: [0, 0, 0, 1],
@@ -42,6 +46,16 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'addObject',
+      'setEditor'
+    ]),
+
+    _addObject () {
+      this.addObject(this.layer)
+      this.setEditor(false)
+    },
+
     getColorPickerStyle (color) {
       return {
         'background-color': `rgba(${color.join(', ')})`
@@ -62,6 +76,8 @@ export default {
 .draw-wrapper {
   position: relative;
   flex: 1;
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom:0 ;
 }
 
 .draw-container {
@@ -69,19 +85,19 @@ export default {
 
 .draw-tools {
   position: absolute;
-  bottom: 8px;
+  bottom: 0;
   left: 0;
-  right: 0;
+  width: 64px;
   text-align: center;
 }
 
-.color-picker {
+.tool {
   width: 42px;
   height: 42px;
+  line-height: 42px;
   border-radius: 50%;
   display: inline-block;
-  margin-left: 8px;
-  margin-right: 8px;
+  margin: 8px;
   box-shadow: 0px 0px 30px 0px rgba(0, 0, 0, 0.3);
   border: 4px solid;
   border-color: transparent;

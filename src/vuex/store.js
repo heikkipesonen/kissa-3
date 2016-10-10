@@ -14,12 +14,25 @@ const state = {
       width: 0,
       height: 0
     }
-  }
+  },
+
+  editor: false,
+
+  objects: []
 }
 
 const mutations = {
   setView (state, view) {
     state.view = view
+  },
+
+  addObject (state, shape) {
+    state.objects.push(shape)
+  },
+
+  setEditor (state, type) {
+    console.log(type)
+    state.editor = type
   }
 }
 
