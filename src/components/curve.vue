@@ -1,6 +1,6 @@
 <template>
   <g>
-    <path :style="style" :d="curve" v-for="curve in curves"></path>
+    <path :style="style" :d="curve" v-for="curve in layers"></path>
   </g>
 </template>
 <script>
@@ -25,9 +25,9 @@ export default {
       }
     },
 
-    curves () {
-      if (this.data.curves && this.data.curves.length) {
-        return this.data.curves.map((curve) => {
+    layers () {
+      if (this.data.layers && this.data.layers.length) {
+        return this.data.layers.map((curve) => {
           let m = curve.slice(0, 1)
           let c = curve.slice(1)
           return 'M' + m.join(' ') + ' C ' + c.map((cc) => cc.join(' ')).join(',')

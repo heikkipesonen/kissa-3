@@ -2,7 +2,7 @@
   <svg v-on:mousedown="startDraw" v-on:mousemove="draw">
     <g>
       <Curve v-for="shape in layer" :data="shape"></Curve>
-      <Curve v-if="currentShape.curves" :data="currentShape"></Curve>
+      <Curve v-if="currentShape.layers" :data="currentShape"></Curve>
     </g>
   </svg>
 </template>
@@ -61,10 +61,6 @@ export default {
     }
   },
 
-  computed: {
-
-  },
-
   methods: {
     /**
      * init drawin, create new shape
@@ -78,7 +74,7 @@ export default {
         stroke: this.color.map((c) => c),
         strokeWidth: this.cursor,
         points: [[this.lastEvent.x, this.lastEvent.y]],
-        curves: []
+        layers: []
       }
     },
 
@@ -92,7 +88,7 @@ export default {
         let position = getPointer(event)
         this.currentShape.points.push([position.x, position.y])
         if (this.currentShape && this.currentShape.points.length > 2) {
-          this.currentShape.curves = fitCurve(this.currentShape.points)
+          this.currentShape.layers = fitCurve(this.currentShape.points)
         }
       }
     },
@@ -106,7 +102,12 @@ export default {
       this.lastEvent = false
       if (this.currentShape && this.currentShape.points.length > 2) {
         this.currentShape.curves = fitCurve(this.currentShape.points, this.error)
-        this.layer.push(this.currentShape)
+        this.layer.push({
+          type: 'curve',
+          layers: this.currentShape.curves,
+          stroke: this.currentShape.stroke,
+          strokeWidth: this.currentShape.strokeWidth
+        })
       }
       this.currentShape = false
     }

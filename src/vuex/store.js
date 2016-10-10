@@ -27,10 +27,6 @@ const mutations = {
   },
 
   addLayer (state, layer) {
-    // let screenPositionOnCanvas = {
-    //   x: x + this.view.x * this.view.scale,
-    //   y: y + this.view.y + this.view.scale
-    // }
     state.layers.push({
       x: -state.view.x * (1 / state.view.scale),
       y: -state.view.y * (1 / state.view.scale),
