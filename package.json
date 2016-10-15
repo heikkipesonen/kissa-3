@@ -1,7 +1,7 @@
 {
   "name": "wall",
   "version": "1.0.0",
-  "description": "Kissa-3",
+  "description": "vue webpack template",
   "author": "heikkipesonen <heikki.pesonen@sysart.fi>",
   "private": true,
   "scripts": {
